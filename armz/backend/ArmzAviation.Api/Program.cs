@@ -63,7 +63,14 @@ builder.Services.AddSwaggerGen(c =>
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
 builder.Services.AddCors(opt => opt.AddPolicy("Frontend", p =>
-    p.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod()));
+    p.SetIsOriginAllowed(origin =>
+        !string.IsNullOrEmpty(origin) &&
+        (origin == "https://armz-worksystem.vercel.app" ||
+         origin == "https://armz-worksystem-f103eot1w-armzworksystem.vercel.app" ||
+         (Uri.TryCreate(origin, UriKind.Absolute, out var uri) && uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)) ||
+         origin == "http://localhost:5173"))
+     .AllowAnyHeader()
+     .AllowAnyMethod()));
 
 var app = builder.Build();
 
@@ -100,6 +107,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
 app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
