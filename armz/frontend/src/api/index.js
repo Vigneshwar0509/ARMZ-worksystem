@@ -1,10 +1,7 @@
-const DEFAULT_API_BASE_URL = 'https://armz-worksystem-1.onrender.com';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || (
-  typeof window !== 'undefined' && !['localhost', '127.0.0.1'].includes(window.location.hostname)
-    ? DEFAULT_API_BASE_URL
-    : undefined
-);
-const BASE = BASE_URL ? `${BASE_URL.replace(/\/$/, '')}/api` : '/api';
+const LOCAL_FALLBACK = '/api';
+const BASE_URL = import.meta.env.VITE_API_URL;
+const isLocalhost = typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const BASE = BASE_URL ? `${BASE_URL.replace(/\/$/, '')}/api` : (isLocalhost ? LOCAL_FALLBACK : 'https://armz-worksystem-1.onrender.com/api');
 
 function getToken() {
   return localStorage.getItem('armz_token');
