@@ -1,0 +1,24 @@
+.leave-page {}
+
+.leave-balance-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 16px;
+}
+.bal-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+}
+.bal-label { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+.bal-numbers { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+.bal-avail { font-family: var(--font-display); font-size: 32px; font-weight: 700; line-height: 1; }
+.bal-detail { font-size: 11px; color: var(--text-muted); }
+.bal-bar { height: 4px; background: var(--bg-card2); border-radius: 2px; overflow: hidden; }
+.bal-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+
+.apply-form { margin-bottom: 16px; }
+.apply-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
+.apply-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+
+.section-title {
+  font-family: var(--font-display); font-size: 17px; font-weight: 700;
+  color: var(--accent); margin-bottom: 14px;
+}

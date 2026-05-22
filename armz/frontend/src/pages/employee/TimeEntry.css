@@ -1,0 +1,30 @@
+.te-page {}
+
+.te-form { margin-bottom: 14px; }
+.te-form-title {
+  font-family: var(--font-display); font-size: 20px; font-weight: 700;
+  color: var(--primary); margin-bottom: 16px; letter-spacing: 0.5px;
+}
+.te-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;
+}
+.te-form-footer {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.te-total-badge {
+  margin-left: auto; font-size: 13px; color: var(--text-muted);
+}
+
+.te-filter {
+  display: flex; align-items: flex-end; gap: 16px;
+  margin-bottom: 14px; padding: 16px 20px;
+}
+.te-filter .form-group { flex: 0 0 180px; }
+
+.te-table-card {}
+.te-table-title {
+  font-family: var(--font-display); font-size: 18px; font-weight: 700;
+  color: var(--accent); margin-bottom: 14px;
+}
+.selected-row td { background: rgba(124,58,237,0.08); }
+.total-row td { background: var(--bg-card2); border-top: 2px solid var(--border); }
