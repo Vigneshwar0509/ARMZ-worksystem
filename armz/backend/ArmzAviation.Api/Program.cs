@@ -1,4 +1,5 @@
 using System.Text;
+using System;
 using ArmzAviation.Api.Data;
 using ArmzAviation.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -103,4 +104,17 @@ app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Bind to Render's PORT environment variable if present, otherwise default to 8080
+var portEnv = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(portEnv))
+{
+    app.Urls.Clear();
+    app.Urls.Add($"http://*:{portEnv}");
+}
+else
+{
+    app.Urls.Add("http://*:8080");
+}
+
 app.Run();

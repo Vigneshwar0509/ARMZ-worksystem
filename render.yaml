@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: armz-api
+    env: docker
+    dockerfilePath: backend/ArmzAviation.Api/Dockerfile
+    plan: free
+    branch: main
+    autoDeploy: true
+    instanceCount: 1
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
