@@ -3,6 +3,7 @@ services:
     name: armz-api
     env: docker
     dockerfilePath: backend/ArmzAviation.Api/Dockerfile
+    healthCheckPath: /health
     plan: free
     branch: main
     autoDeploy: true
