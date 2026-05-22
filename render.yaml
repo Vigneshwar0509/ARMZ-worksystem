@@ -1,7 +1,12 @@
 services:
   - type: web
-    name: armz-api
+    name: armz-worksystem
     env: docker
+    # Repository root directory for Render (set to the inner 'armz' folder)
+    rootDir: armz
+    # Docker build context relative to the rootDir
+    dockerContext: backend/ArmzAviation.Api
+    # Dockerfile path relative to the rootDir
     dockerfilePath: backend/ArmzAviation.Api/Dockerfile
     healthCheckPath: /health
     plan: free
