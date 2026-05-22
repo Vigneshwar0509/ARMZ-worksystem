@@ -12,7 +12,10 @@ function getToken() {
 
 async function req(method, path, body) {
   const token = getToken();
-  const res = await fetch(`${BASE}${path}`, {
+  const url = `${BASE}${path}`;
+  console.log('[API] request', { method, url, body, tokenPresent: !!token });
+
+  const res = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -31,9 +34,31 @@ async function req(method, path, body) {
   if (res.status === 204) return null;
 
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data = null;
 
-  if (!res.ok) throw new Error(data?.message || `Error ${res.status}`);
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch (err) {
+    console.error('[API] JSON parse failed', {
+      method,
+      url,
+      status: res.status,
+      statusText: res.statusText,
+      responseText: text,
+      error: err,
+    });
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status} ${res.statusText}: ${text}`);
+    }
+
+    throw new Error(`Invalid JSON response from ${url}: ${text}`);
+  }
+
+  if (!res.ok) {
+    throw new Error(data?.message || `Error ${res.status}`);
+  }
+
   return data;
 }
 
