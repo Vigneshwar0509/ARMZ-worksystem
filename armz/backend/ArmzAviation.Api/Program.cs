@@ -7,12 +7,28 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Database ──────────────────────────────────────────────────────────────────
-builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=armz.db"));
+var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
+var connString = isProduction
+    ? (Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("DefaultConnection"))
+    : builder.Configuration.GetConnectionString("Default") ?? "Data Source=armz.db";
+
+if (isProduction && !string.IsNullOrEmpty(connString))
+{
+    // PostgreSQL for production
+    builder.Services.AddDbContext<AppDbContext>(opt =>
+        opt.UseNpgsql(connString));
+}
+else
+{
+    // SQLite for development
+    builder.Services.AddDbContext<AppDbContext>(opt =>
+        opt.UseSqlite(connString));
+}
 
 // ── JWT Auth ──────────────────────────────────────────────────────────────────
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "ArmzAviationSuperSecretKey2026!!";
