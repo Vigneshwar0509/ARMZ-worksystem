@@ -99,25 +99,6 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
-    try
-    {
-        // Force a read against the monthly events table so we can detect a stale schema.
-        _ = db.MonthlyEvents.Any();
-    }
-    catch (SqliteException ex) when (ex.Message.Contains("no such table") || ex.Message.Contains("unable to open database file"))
-    {
-        db.Database.ExecuteSqlRaw(@"
-CREATE TABLE IF NOT EXISTS ""MonthlyEvents"" (
-    ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_MonthlyEvents"" PRIMARY KEY AUTOINCREMENT,
-    ""Title"" TEXT NOT NULL,
-    ""Description"" TEXT NOT NULL,
-    ""Date"" TEXT NOT NULL,
-    ""CreatedAt"" TEXT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS ""IX_MonthlyEvents_Date"" ON ""MonthlyEvents"" (""Date"");");
-    }
-
     DbSeeder.Seed(db);
 }
 
