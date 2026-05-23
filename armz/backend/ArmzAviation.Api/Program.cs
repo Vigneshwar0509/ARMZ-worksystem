@@ -13,21 +13,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ── Database ──────────────────────────────────────────────────────────────────
 var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
-var connString = isProduction
-    ? (Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("DefaultConnection"))
-    : builder.Configuration.GetConnectionString("Default") ?? "Data Source=armz.db";
+var productionConnString = Environment.GetEnvironmentVariable("DATABASE_URL")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
-if (isProduction && !string.IsNullOrEmpty(connString))
+if (isProduction)
 {
-    // PostgreSQL for production
+    if (string.IsNullOrWhiteSpace(productionConnString))
+    {
+        throw new InvalidOperationException(
+            "Production database connection string is required. Set DATABASE_URL or ConnectionStrings__DefaultConnection.");
+    }
+
     builder.Services.AddDbContext<AppDbContext>(opt =>
-        opt.UseNpgsql(connString));
+        opt.UseNpgsql(productionConnString));
 }
 else
 {
-    // SQLite for development
+    var sqliteConnString = builder.Configuration.GetConnectionString("Default") ?? "Data Source=armz.db";
     builder.Services.AddDbContext<AppDbContext>(opt =>
-        opt.UseSqlite(connString));
+        opt.UseSqlite(sqliteConnString));
 }
 
 // ── JWT Auth ──────────────────────────────────────────────────────────────────
